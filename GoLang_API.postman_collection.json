@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "1096d840-dad5-4d09-a223-6b37b9ddcd72",
+		"name": "GoLang_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:10000",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:10000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HttpPOST",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:10000/hellopost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000",
+					"path": [
+						"hellopost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:10000/hellopost",
+			"request": {
+				"method": "HEAD",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:10000/hellopost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000",
+					"path": [
+						"hellopost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:10000/hellopost",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorize",
+						"value": "Bearer from me",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:10000/hellopost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000",
+					"path": [
+						"hellopost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HttpPatch, read body json",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Fromdate\":\"01/07/2021\",\r\n    \"Todate\":\"01/08/2021\",\r\n    \"Note\":\"Not good! Man\",\r\n    \"Name\":\"David\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10000/hellopost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000",
+					"path": [
+						"hellopost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gin test GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6673/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6673",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gin POST",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 2021",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Fromdate\":\"01/07/2021\",\r\n    \"Todate\":\"01/08/2021\",\r\n    \"Note\":\"Not good! Man\",\r\n    \"Name\":\"David\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:6673/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6673",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download File GoLang",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6673/downloadFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6673",
+					"path": [
+						"downloadFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:6673/export-pdf",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6673/export-pdf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6673",
+					"path": [
+						"export-pdf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:6673/reados",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6673/reados",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6673",
+					"path": [
+						"reados"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
