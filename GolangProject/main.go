@@ -3,6 +3,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -15,6 +16,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/tealeg/xlsx"
+
+	"database/sql"
+
+	_ "github.com/lib/pq"
 )
 
 type Article struct {
@@ -38,6 +43,17 @@ type _DateReport struct {
 	Fromdate string `json:"Fromdate"`
 	Todate   string `json:"Todate"`
 	Note     string `json:"Note"`
+}
+
+type errYsPH struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+type ysPhuHuynh struct {
+	Success bool          `json:"success"`
+	Data    interface{}   `json:"data"`
+	List    []interface{} `json:"list"`
+	Error   errYsPH       `json:"error"`
 }
 
 type StatusCodes int
@@ -141,6 +157,9 @@ func mainGin() {
 	router.POST("/downloadFile", downloadFromGin)
 	router.POST("/reados", readOSVariable)
 	router.POST("/export-pdf", downloadFilePDF)
+	router.GET("/call-another-api", callAPIToAnother_GetMethod)
+	router.POST("/call-another-api", postToAnotherAPI_PostMethod)
+	router.POST("/api-header-body", postToAnotherAPI_With_HeaderAndBody)
 
 	// api := router.Group("/api")
 	// {
@@ -336,7 +355,101 @@ func downloadFilePDF(c *gin.Context) {
 	c.File("./PDFFile_Table.pdf")
 }
 
+func callAPIToAnother_GetMethod(c *gin.Context) {
+
+	resp, err := http.Get(`https://apiys.yschool.vn/api/dangkytaikhoan/DangKyOTP?_soDienThoai=0909000001`)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	sb := string(body)
+
+	sb3 := sb + ""
+	c.IndentedJSON(StatusCodeOK, sb3)
+
+	// var _mYS ysPhuHuynh
+	// json.Unmarshal(body, &_mYS)
+	// c.IndentedJSON(StatusCodeOK, _mYS)
+}
+
+func postToAnotherAPI_PostMethod(c *gin.Context) {
+	values := map[string]string{"PhoneNumber": "0223355617", "Password": "123123123"}
+	jsonValue, _ := json.Marshal(values)
+	respLogin, errLogin := http.Post(`https://apiys.yschool.vn/api/account/login_v2`, "application/json", bytes.NewBuffer(jsonValue))
+	if errLogin != nil {
+		log.Fatalln(errLogin)
+		c.IndentedJSON(StatusCodeOK, errLogin.Error())
+	}
+	bodyLogin, _ := ioutil.ReadAll(respLogin.Body)
+	sb2 := string(bodyLogin)
+	c.IndentedJSON(StatusCodeOK, sb2)
+}
+
+func postToAnotherAPI_With_HeaderAndBody(c *gin.Context) {
+
+	client := http.Client{}
+	valuesCheckUpdate := map[string]string{"DevicesToken": "bf7ab492-ad95-402b-92dd-418860273dd5", "DevicesInfo": "android", "IdUser": "189127", "Status": "1", "IdApp": "mn_ph_m"}
+	jsonValueCheckUpd, _ := json.Marshal(valuesCheckUpdate)
+
+	reqYS, _ := http.NewRequest(http.MethodPost, `https://apiys.yschool.vn/api/thongbaophuhuynh/ThongBao_Insert_Update_V2`, bytes.NewBuffer(jsonValueCheckUpd))
+	reqYS.Header.Add("Token", "365f9c64-d5d2-485f-9da9-b5d66ed37995")
+	reqYS.Header.Add("Content-Type", "application/json")
+
+	resTB, errTB := client.Do(reqYS)
+	if errTB != nil {
+		c.IndentedJSON(StatusCodeOK, errTB.Error())
+	}
+	bodyLogin, _ := ioutil.ReadAll(resTB.Body)
+	sb2 := string(bodyLogin)
+	c.IndentedJSON(StatusCodeOK, sb2)
+}
+
+func callImportModuleSQL() {
+
+	connStr := "user=postgres dbname=SampleDesmo password=123123 host=localhost sslmode=disable"
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	//region
+
+	rows, err := db.Query("SELECT username FROM accounts;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var title string
+		if err := rows.Scan(&title); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(title)
+	}
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	//endregion
+
+	fmt.Printf("\nSuccessfully connected to database!\n")
+
+}
+
 func main() {
+
+	callImportModuleSQL()
 
 	saveExcelFile()
 	// handleRequests()
